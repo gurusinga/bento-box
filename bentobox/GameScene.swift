@@ -53,7 +53,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player.emit = true
         //gameOver = true
         refresh.hidden = true
-        
     }
     
     
@@ -111,7 +110,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         addEnemy(named: "sushi-1", speed: 1.9, xPos: CGFloat(self.size.width / 4))
         addEnemy(named: "sushi-2", speed: 2.3, xPos: CGFloat(0))
         addEnemy(named: "sushi-3", speed: 3.5, xPos: CGFloat(-(self.size.width / 4)))
-        addEnemy(named: "sushi-2", speed: 4.0, xPos: CGFloat(self.size.width / 5))
         
     }
     
