@@ -53,6 +53,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player.emit = true
         //gameOver = true
         refresh.hidden = true
+        updateScore()
     }
     
     
@@ -198,8 +199,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                     enemy.currentFrame = 0
                     enemy.setRandomFrame()
                     enemy.moving = false
-                    enemy.range += 0.5
-                    updateScore()
+                    enemy.range += 0.2
+                    
                 }
             }
         }
