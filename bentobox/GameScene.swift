@@ -55,8 +55,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         refresh.hidden = true
         updateScore()
     }
-    
-    
+
     func addBG() {
         
         let bg = SKSpriteNode(imageNamed: "bg")
