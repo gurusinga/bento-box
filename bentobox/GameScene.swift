@@ -17,12 +17,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var theEnemies:[Enemy]  = []
     var endOfScreenTop = CGFloat()
     var endOfScreenBottom = CGFloat()
-    var score = 0
-    var scoreLabel = SKLabelNode()
+    var sushiCatched = 0
+    var sushiCatchedLabel = SKLabelNode()
+    var ConvertCatchedSushiToMoney = 0
+    var ConvertCatchedSushiToMoneyLabel = SKLabelNode()
     var timer = NSTimer()
     var refresh = SKSpriteNode(imageNamed: "refresh")
     var countDownText = SKLabelNode(text: "5")
     var countDown = 5
+    
     
     
     
@@ -38,9 +41,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         addBG()
         addChopstick()
         addEnemies()
-        scoreLabel = SKLabelNode(text:"0")
-        scoreLabel.position.x = CGFloat(self.size.width / 4)
-        addChild(scoreLabel)
+        sushiCatchedLabel = SKLabelNode(text:"0")
+        sushiCatchedLabel.position.x = CGFloat(self.size.width / 100 )
+        sushiCatchedLabel.position.y = CGFloat(self.size.height / 3)
+        addChild(sushiCatchedLabel)
+        
+        ConvertCatchedSushiToMoneyLabel = SKLabelNode(text:"0")
+        ConvertCatchedSushiToMoneyLabel.position.x =  CGFloat(self.size.width / 100)
+        ConvertCatchedSushiToMoneyLabel.position.y = CGFloat(self.size.height / 4)
+        addChild(ConvertCatchedSushiToMoneyLabel)
+        
         addChild(refresh)
         addChild(countDownText)
         countDownText.hidden = true
@@ -53,9 +63,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player.emit = true
         //gameOver = true
         refresh.hidden = true
-        updateScore()
+        updateSushiCatched()
+        updateConvertCatchedSushiToMoney()
+        
     }
-
+    
+    
     func addBG() {
         
         let bg = SKSpriteNode(imageNamed: "bg")
@@ -67,8 +80,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player.thePlayer.position.x = 0
         player.thePlayer.position.y = 0
         refresh.hidden = true
-        score = 0
-        scoreLabel.text = "0"
+        sushiCatched = 0
+        sushiCatchedLabel.text = "0"
+        ConvertCatchedSushiToMoney = 0
+        ConvertCatchedSushiToMoneyLabel.text = "0"
         for enemy in theEnemies {
             resetEnemy(enemy.theEnemy, xPos: enemy.xPos)
         }
@@ -193,6 +208,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 enemy.angle += player.speed
                 if enemy.theEnemy.position.y > endOfScreenBottom {
                     enemy.theEnemy.position.y -= CGFloat(enemy.speed)
+
+                    
+                    if enemy.theEnemy.position.y < endOfScreenBottom {
+                        enemy.theEnemy.hidden = true
+                    } else {
+                                enemy.theEnemy.hidden = false
+                    }
                 } else {
                     enemy.theEnemy.position.y = endOfScreenTop
                     enemy.currentFrame = 0
@@ -205,8 +227,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         }
     }
     
-    func updateScore() {
-        score++
-        scoreLabel.text = String(score)
+    func updateSushiCatched() {
+        sushiCatched++
+        sushiCatchedLabel.text = String(sushiCatched)
+    }
+    
+    func updateConvertCatchedSushiToMoney() {
+        if sushiCatched == 3 {
+            ConvertCatchedSushiToMoney += 1100
+            sushiCatched = 0
+            sushiCatchedLabel.text = "0"
+        }
+        ConvertCatchedSushiToMoneyLabel.text = String(ConvertCatchedSushiToMoney)
     }
 }
