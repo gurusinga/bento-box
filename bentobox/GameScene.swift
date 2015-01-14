@@ -298,12 +298,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         caughtSushiLabel.text = String(caughtSushi)
     }
     
-    func lostSushi(enemyNode:SKSpriteNode, chopstick:SKSpriteNode) {
-        if enemyNode.position.y > endOfScreenBottom && enemyNode.position.x != chopstick.position.x {
-            convertCaughtSushiToMoney -= 300
-        }
-    }
-    
     func updateconvertCaughtSushiToMoney() {
         if caughtSushi == 3 {
             player.emit = false
