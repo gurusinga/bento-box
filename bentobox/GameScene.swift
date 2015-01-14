@@ -75,9 +75,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         convertCaughtSushiToMoneyLabel.fontName = "HelveticaNeue"
         addChild(convertCaughtSushiToMoneyLabel)
         
-        
-        
-        
         addChild(refresh)
         addChild(countDownText)
         countDownText.hidden = true
@@ -88,14 +85,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     
     func didBeginContact(contact: SKPhysicsContact) {
-        
         //gameOver = true
         refresh.hidden = true
         updatecaughtSushi()
         updateconvertCaughtSushiToMoney()
         addNice()
-        
-        
     }
     
     
@@ -136,15 +130,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         nice.runAction(sequence);
         
     }
-
-    
     
     func addBG() {
         
         let bg = SKSpriteNode(imageNamed: "bg")
         addChild(bg)
     }
-    
     
     func reloadGame(){
         countDownText.hidden = false
@@ -224,6 +215,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         enemyNode.position.x = xPos
     }
     
+    
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
         /* Called when a touch begins */
         
@@ -277,29 +269,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 if enemy.currentFrame > enemy.randomFrame {
                     enemy.moving = true
                 }
+                
             } else {
                 enemy.theEnemy.position.x = CGFloat(Double(enemy.theEnemy.position.x) + cos(enemy.angle) * enemy.range/3 )
                 enemy.angle += player.speed
                 if enemy.theEnemy.position.y > endOfScreenBottom {
                     enemy.theEnemy.position.y -= CGFloat(enemy.speed)
-                    
                     if enemy.theEnemy.position.y < endOfScreenBottom {
                         enemy.theEnemy.hidden = true
-                        
                     } else {
-                                enemy.theEnemy.hidden = false
+                        enemy.theEnemy.hidden = false
                     }
+                    
                 } else {
                     enemy.theEnemy.position.y = endOfScreenTop
                     enemy.currentFrame = 0
                     enemy.setRandomFrame()
                     enemy.moving = false
                     enemy.range += 0.1
-                    
                 }
             }
         }
     }
+    
     
     func updatecaughtSushi() {
         caughtSushi++
@@ -320,8 +312,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             caughtSushiLabel.text = "0"
             addYen()
         }
-        
-        
         convertCaughtSushiToMoneyLabel.text = String(convertCaughtSushiToMoney)
     }
 }
