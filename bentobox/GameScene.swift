@@ -25,14 +25,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var caughtSushiLabel = SKLabelNode()
     var convertCaughtSushiToMoney = 0
     var convertCaughtSushiToMoneyLabel = SKLabelNode()
-    //Reset Timer
+    //Timer game reset
     var timer = NSTimer()
     var refresh = SKSpriteNode(imageNamed: "refresh")
     var countDownText = SKLabelNode(text: "5")
     var countDown = 5
-
-    
-    
+    //Game Timer
+    var gameTimer = NSTimer()
+    var gameTimerText = SKLabelNode()
+    var endGame = 120
     
     
     enum ColliderType:UInt32 {
@@ -42,13 +43,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     override func didMoveToView(view: SKView) {
         
+        
         self.physicsWorld.contactDelegate = self
         endOfScreenBottom = (self.size.height / 2) * CGFloat(-1)
         endOfScreenTop  = (self.size.height  / 2)
         addBG()
         addChopstick()
         addEnemies()
+        addTimer()
+        //Game Timer
+        gameTimerText = SKLabelNode(text:"120")
+        gameTimerText.position.x = CGFloat(self.size.height / 100)
+        gameTimerText.position.y = CGFloat(self.size.width / 2.4)
+        gameTimerText.fontSize = 30
+        gameTimerText.fontName = "HelveticaNeue"
+        addChild(gameTimerText)
         
+        //SUSHI - Text label
         scoreText = SKLabelNode(text:"Sushi")
         scoreText.position.x = CGFloat(self.size.height / -4)
         scoreText.position.y = CGFloat(self.size.width / 2.4)
@@ -56,12 +67,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         scoreText.fontName = "HelveticaNeue"
         addChild(scoreText)
         
+        //SUSHI - Number label
         caughtSushiLabel = SKLabelNode(text:"0")
         caughtSushiLabel.position.x = CGFloat(self.size.height / -4.5)
         caughtSushiLabel.position.y = CGFloat(self.size.width / 2)
         caughtSushiLabel.fontName = "HelveticaNeue"
         addChild(caughtSushiLabel)
         
+        //YEN - Text label
         scoreText = SKLabelNode(text: "Yen")
         scoreText.position.x = CGFloat(self.size.height / 4)
         scoreText.position.y = CGFloat(self.size.width / 2.4)
@@ -69,6 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         scoreText.fontName = "HelveticaNeue"
         addChild(scoreText)
         
+        //YEN - Number label
         convertCaughtSushiToMoneyLabel = SKLabelNode(text:"0")
         convertCaughtSushiToMoneyLabel.position.x =  CGFloat(self.size.height / 4.5)
         convertCaughtSushiToMoneyLabel.position.y = CGFloat(self.size.width / 2)
@@ -77,6 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         addChild(refresh)
         addChild(countDownText)
+        
         countDownText.hidden = true
         refresh.name = "refresh"
         refresh.hidden = true
@@ -85,8 +100,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     
     func didBeginContact(contact: SKPhysicsContact) {
-        //gameOver = true
         refresh.hidden = true
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask
+        {
+            println("CONTACT")
+
+        }else{
+            println("blabla")
+        }
         updatecaughtSushi()
         updateconvertCaughtSushiToMoney()
         addNice()
@@ -100,15 +121,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         yen.position = CGPoint(x:CGFloat(self.size.height / 100),y:self.size.width / 25)
         addChild(yen)
         
-        var actions = Array<SKAction>();
-        actions.append(SKAction.fadeInWithDuration(0.2));
-        actions.append(SKAction.moveTo(CGPoint(x:10,y:170), duration: 0.3));
+        var actions = Array<SKAction>()
+        actions.append(SKAction.fadeInWithDuration(0.2))
+        actions.append(SKAction.moveTo(CGPoint(x:10,y:170), duration: 0.3))
         
-        actions.append(SKAction.moveBy(CGVector(dx: 100,dy: 0), duration: 0.3));
-        actions.append(SKAction.rotateByAngle(90, duration: 0.3));
+        actions.append(SKAction.moveBy(CGVector(dx: 100,dy: 0), duration: 0.3))
+        actions.append(SKAction.rotateByAngle(90, duration: 0.3))
         actions.append(SKAction.scaleTo(2, duration: 0.2))
-        actions.append(SKAction.fadeOutWithDuration(0.2));
-        actions.append(SKAction.removeFromParent());
+        actions.append(SKAction.fadeOutWithDuration(0.2))
+        actions.append(SKAction.removeFromParent())
         let sequence = SKAction.sequence(actions)
         yen.runAction(sequence);
         
@@ -139,8 +160,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     func reloadGame(){
         countDownText.hidden = false
-        player.thePlayer.position.x = 0
-        player.thePlayer.position.y = 0
+        endGame = 120
         refresh.hidden = true
         caughtSushi = 0
         caughtSushiLabel.text = "0"
@@ -152,6 +172,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateTimer"), userInfo: nil, repeats: true)
         
+    }
+    
+    func addTimer() {
+        gameTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: Selector("updateGameTimer"), userInfo: nil, repeats: true)
     }
     
     func updateTimer() {
@@ -168,14 +192,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         }
     }
     
+    func updateGameTimer() {
+        if endGame > 0 {
+            endGame--
+            gameTimerText.text = String(endGame)
+            
+        } else {
+            endGame = 120
+            gameTimerText.text = String(endGame)
+            gameTimerText.hidden = true
+            gameOver = false
+            gameTimer.invalidate()
+            
+        }
+    }
+    
     func addChopstick() {
         let chopstick = SKSpriteNode(imageNamed: "chopstick")
         chopstick.position.x = CGFloat (self.size.height / 100)
         chopstick.position.y = CGFloat (self.size.width / -2)
         chopstick.physicsBody = SKPhysicsBody(circleOfRadius: chopstick.size.height/2)
         chopstick.physicsBody!.affectedByGravity = false
-        chopstick.physicsBody!.mass = 999
         chopstick.physicsBody!.dynamic = true
+        chopstick.physicsBody!.mass = 999
         chopstick.physicsBody!.categoryBitMask = ColliderType.Player.rawValue
         chopstick.physicsBody!.contactTestBitMask = ColliderType.Enemy.rawValue
         chopstick.physicsBody!.collisionBitMask = ColliderType.Enemy.rawValue
@@ -208,6 +247,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         resetEnemy(enemyNode, xPos: xPos)
         enemy.xPos = enemyNode.position.x
         addChild(enemyNode)
+        
     }
     
     func resetEnemy(enemyNode:SKSpriteNode, xPos:CGFloat){
@@ -242,13 +282,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player.thePlayer.runAction(moveAction)
         
     }
+    
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
         if !gameOver {
             updateEnemiesPosition()
+            
         }
         updatePlayerEmitter()
+        
+        if endGame == 0 {
+            gameOver = true
+            reloadGame()
+        }
+        
     }
     
     func updatePlayerEmitter() {
@@ -302,8 +350,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if caughtSushi == 3 {
             player.emit = false
             convertCaughtSushiToMoney += 1100
-            caughtSushi = 0
-            caughtSushiLabel.text = "0"
+            //caughtSushi = 0
+            //caughtSushiLabel.text = "0"
             addYen()
         }
         convertCaughtSushiToMoneyLabel.text = String(convertCaughtSushiToMoney)
