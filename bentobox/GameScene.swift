@@ -95,22 +95,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         countDownText.hidden = true
         refresh.name = "refresh"
         refresh.hidden = true
+
         
     }
     
     
     func didBeginContact(contact: SKPhysicsContact) {
         refresh.hidden = true
-        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask
-        {
-            println("CONTACT")
-
-        }else{
-            println("blabla")
-        }
         updatecaughtSushi()
         updateconvertCaughtSushiToMoney()
         addNice()
+        
     }
     
     
@@ -296,7 +291,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             gameOver = true
             reloadGame()
         }
-        
     }
     
     func updatePlayerEmitter() {
